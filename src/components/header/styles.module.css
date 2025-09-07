@@ -2,13 +2,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 24px;
+  padding: 40px;
   background: #fff;
 }
 
 /* Logo links */
 .logo img {
-  width: 40px;
+  width: 70px;
   height: auto;
   cursor: pointer;
 }
@@ -16,7 +16,7 @@
 /* Navigation */
 .list ul {
   display: flex;
-  gap: 32px;
+  gap: 35px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -25,7 +25,7 @@
 .list ul li a {
   text-decoration: none;
   color: #333;
-  font-size: 14px;
+  font-size: 20px;
   font-weight: 500;
   transition: color 0.2s ease;
 }
@@ -34,9 +34,46 @@
   color: blue;
 }
 
+
 /* Icon rechts */
 .icon img {
-  width: 28px;
+  width: 48px;
   height: auto;
   cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .list ul {
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+  }
+
+  .list ul li a {
+    font-size: 18px;
+  }
+
+  .icon {
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo img {
+    width: 50px;
+  }
+
+  .list ul li a {
+    font-size: 16px;
+  }
+
+  .icon img {
+    width: 36px;
+  }
 }

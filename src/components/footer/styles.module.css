@@ -1,0 +1,66 @@
+.footer {
+  padding: 40px;
+  background: #fff;
+}
+
+.footer h1 {
+  font-size: 64px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #222;
+}
+
+/* Grid 4x Card */
+.container {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
+  gap: 30px;
+  margin-bottom: 30px;
+  align-items: stretch
+}
+
+
+.card {
+  background: #f7f8f9;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.card p {
+  margin: 0 0 8px;
+  color: #777;
+  font-size: 20px;
+}
+
+.card h2 {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 600;
+  color: #222;
+}
+
+.socials {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.socials img {
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+}
+
+/* Map */
+.map img {
+  width: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+}
