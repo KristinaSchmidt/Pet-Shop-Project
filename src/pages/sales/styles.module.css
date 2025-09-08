@@ -1,0 +1,83 @@
+.section{ 
+    padding: 40px; 
+}
+
+.header{ 
+    display:flex; 
+    align-items:center; 
+    gap:16px; 
+    margin:16px 0; 
+}
+
+.header h2{ 
+    margin:0; 
+    font-size:32px; 
+    font-weight:800; 
+}
+
+.grid{ 
+    display:grid; 
+    grid-template-columns:repeat(4, minmax(0,1fr)); 
+    gap:18px 22px; 
+}
+
+.cardLink{ 
+    display:block; 
+    text-decoration:none; 
+    color:inherit; 
+}
+
+.thumb{ 
+    position:relative; 
+    border-radius:12px; 
+    overflow:hidden; 
+    margin-bottom:10px; 
+    border:1px solid #eee; 
+}
+
+.thumb img{ 
+    width:100%; 
+    height:220px; 
+    object-fit:cover; 
+}
+
+.badge{ 
+    position:absolute; 
+    top:10px; right:10px; 
+    background:#2d5bff; 
+    color:#fff; 
+    font-size:12px; 
+    font-weight:700; 
+    padding:4px 8px; 
+    border-radius:8px; 
+}
+
+.title{ 
+    margin:0 0 6px; 
+    font-size:14px; 
+    font-weight:600; 
+    color:#111827; 
+}
+
+.priceRow{ 
+    display:flex; 
+    gap:10px; 
+    align-items:baseline; 
+}
+
+.now{ 
+    font-size:20px; 
+    font-weight:800; 
+}
+
+.old{ 
+    font-size:14px; 
+    color:#9CA3AF; 
+    text-decoration:line-through; 
+}
+
+@media (max-width:980px){ 
+    .grid{ 
+        grid-template-columns:repeat(2, minmax(0,1fr)); 
+    } 
+}
