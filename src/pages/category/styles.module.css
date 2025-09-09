@@ -1,0 +1,151 @@
+.container{
+    max-width:1920px;
+    width:100%;
+    padding:24px 13%;
+    background:#fff;
+}
+
+.breadcrumbs{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    color:#888;
+    font-size:12px;
+    margin-bottom:8px;
+}
+
+.breadcrumbs a{
+    color:#666;
+    text-decoration:none;
+}
+
+.pageTitle{
+    font-size:32px;
+    font-weight:800;
+    margin:12px 0 16px;
+}
+
+.controls{
+    display:flex;
+    gap:16px;
+    align-items:center;
+    flex-wrap:wrap;
+    margin:8px 0 20px;
+}
+
+.price{
+    display:flex;
+    gap:8px;
+    align-items:center;
+}
+
+.price input,.sort select{
+    height:36px;
+    padding:6px 10px;
+    border:1px solid #e6e6ea;
+    border-radius:10px;
+    background:#fff;
+}
+
+.check{
+    display:flex;
+    gap:8px;
+    align-items:center;
+}
+
+.sort{
+    display:flex;
+    gap:8px;
+    align-items:center;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:16px;
+}
+
+.card{
+    display:flex;
+    flex-direction:column;
+    border:1px solid #ececf0;
+    border-radius:16px;
+    overflow:hidden;
+    background:#fff;
+    text-decoration:none;
+    color:inherit;
+}
+
+.imageWrap{
+    position:relative;
+    height:180px;
+    display:grid;
+    place-items:center;
+    background:#f7f7fb;
+}
+
+.imageWrap img{
+    max-width:90%;
+    max-height:90%;
+    object-fit:contain;
+}
+
+.badge{
+    position:absolute;
+    top:8px;
+    right:8px;
+    padding:4px 6px;
+    font-size:12px;
+    font-weight:700;
+    background:#4dabf7;
+    color:#fff;
+    border-radius:6px;
+}
+
+.cardBody{
+    padding:12px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.title{
+    font-size:14px;
+    font-weight:600;
+    min-height:36px;
+    margin:0;
+}
+
+.prices{
+    display:flex;
+    gap:8px;
+    align-items:center;
+}
+
+.price{
+    font-weight:800;
+}
+
+.old{
+    color:#999;
+    text-decoration:line-through;
+}
+
+.addBtn{
+    margin-top:auto;
+    padding:10px 12px;
+    border-radius:12px;
+    border:1px solid #1a1f71;
+    background:#1a1f71;
+    color:#fff;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.muted{
+    color:#777;
+}
+
+.error{
+    color:#b00020;
+}

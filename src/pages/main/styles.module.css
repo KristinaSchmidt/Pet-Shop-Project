@@ -292,14 +292,42 @@
 
 
 /* sales  */
-.saleSection{ margin-top:24px; padding: 40px; }
-.saleHeader{ display:flex; align-items:center; gap:16px; margin-bottom:14px; }
-.saleHeader h2{ margin:0; font-size:64px; font-weight:800; }
-.saleDivider{ flex:1; height:1px; background:#e9e9ee; border-radius:1px; }
-.saleAllBtn{
-  text-decoration:none; font-size:16px; padding:6px 10px; font-weight: 600;
-  border:1px solid #e9e9ee; border-radius:8px; background:#fff; color:#344054;
+.saleSection{ 
+  margin-top:24px; 
+  padding: 40px; 
 }
+
+.saleHeader{ 
+  display:flex; 
+  align-items:center; 
+  gap:16px; 
+  margin-bottom:14px; 
+}
+
+.saleHeader h2{ 
+  margin:0; 
+  font-size:64px; 
+  font-weight:800; 
+}
+
+.saleDivider{ 
+  flex:1; 
+  height:1px; 
+  background:#e9e9ee; 
+  border-radius:1px; 
+}
+
+.saleAllBtn{
+  text-decoration:none; 
+  font-size:16px; 
+  padding:6px 10px; 
+  font-weight: 600;
+  border:1px solid #e9e9ee; 
+  border-radius:8px; 
+  background:#fff; 
+  color:#344054;
+}
+
 
 /* ===== Carousel (4 pro Slide) ===== */
 .saleCarousel{ position:relative; }
@@ -335,11 +363,7 @@
   height:100%;
 }
 
-.saleThumb{
-  position:relative;
-  aspect-ratio: 1/ 1;            /* höher wie im Original */
-  overflow:hidden;
-}
+.saleThumb{ position:relative; aspect-ratio:4/5; overflow:hidden; border-radius:12px; }
 
 .saleThumb img{
   width: 100%;

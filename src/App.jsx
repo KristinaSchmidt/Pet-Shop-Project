@@ -5,6 +5,7 @@ import Main from "./pages/main/index";
 import Footer from "./components/footer/index";
 import Categories from "./pages/categories/index";
 import Sales from "./pages/sales/index";
+import CategoryPage from "./pages/category/index";
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
      <Routes> 
         <Route path= "/" element= {<Main /> } />
         <Route path="/categories" element={<Categories />} />
+        <Route path="/categories/:id" element={<CategoryPage />} />
         {/*<Route path= "/products" element= {<Products />} />*/}
         <Route path= "/sales" element= {<Sales />} />
         <Route path="*" element={<h1 style={{padding:24}}>404 Page Not Found</h1>} />

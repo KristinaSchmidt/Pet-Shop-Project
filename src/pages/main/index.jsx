@@ -56,26 +56,36 @@ useEffect(() => {
       const discounted = (data ?? []).filter(
         (p) => Number(p.discont_price) > 0 && Number(p.discont_price) < Number(p.price)
       );
-      setSaleItems(discounted.slice(0, 8)); // max. 8 insgesamt verfügbar
+      setSaleItems(discounted.slice(0, 8)); // max. 8
       setSaleStatus("succeeded");
     })
     .catch((err) => { setSaleError(err?.message || "Load failed"); setSaleStatus("failed"); });
 }, [saleStatus]);
 
-// === Karussell-Logik (4 pro Slide) ===
+
 const saleSlides = useMemo(() => {
   const out = [];
   for (let i = 0; i < saleItems.length; i += 4) out.push(saleItems.slice(i, i + 4));
   return out;
 }, [saleItems]);
 
+
 const [salePage, setSalePage] = useState(0);
 const [salePaused, setSalePaused] = useState(false);
-useEffect(() => setSalePage(0), [saleSlides.length]);
+
+useEffect(() => { setSalePage(0); }, [saleSlides.length]);
+
+useEffect(() => {
+  if (saleSlides.length <= 1 || salePaused) return;
+  const id = setInterval(() => {
+    setSalePage((p) => (p + 1) % saleSlides.length);
+  }, 4000);
+  return () => clearInterval(id);
+}, [saleSlides.length, salePaused]);
+
 
 const saleCanPrev = salePage > 0;
 const saleCanNext = salePage < Math.max(saleSlides.length - 1, 0);
-
 
 
 
@@ -182,11 +192,11 @@ const saleCanNext = salePage < Math.max(saleSlides.length - 1, 0);
 
 
       <section className={styles.saleSection} aria-label="Sale carousel">
-  <div className={styles.saleHeader}>
-    <h2>Sale</h2>
-    <span className={styles.saleDivider} aria-hidden="true" />
-    <Link to="/sales" className={styles.saleAllBtn}>All sales</Link>
-  </div>
+        <div className={styles.saleHeader}>
+          <h2>Sale</h2>
+          <span className={styles.saleDivider} aria-hidden="true" />
+          <Link to="/sales" className={styles.saleAllBtn}>All sales</Link>
+        </div>
 
   {saleStatus === "loading" && <p className={styles.info}>Loading…</p>}
   {saleStatus === "failed" && <p className={styles.error}>Error: {saleError}</p>}
@@ -216,28 +226,32 @@ const saleCanNext = salePage < Math.max(saleSlides.length - 1, 0);
                 const percent = Math.round(100 * (1 - price / old));
                 return (
                   <li key={p.id} className={styles.saleCard}>
-  <Link to={`/products/${p.id}`} className={styles.saleCardLink}>
-    <div className={styles.saleThumb}>
-      <img src={apiImg(p.image)} alt={p.title} />
-      <span className={styles.saleBadge}>-{percent}%</span>
-    </div>
+                <div className={styles.saleThumb}>
+                  <Link to="/sales" className={styles.saleThumbLink} aria-label="See all sales">
+                    <img src={apiImg(p.image)} alt={p.title} />
+                    <span className={styles.saleBadge}>-{percent}%</span>
+                  </Link>
+                </div>
 
-    {/* ↓ neu: Content im Card unter dem Bild */}
     <div className={styles.saleBody}>
-      <h3 className={styles.saleTitle} title={p.title}>{p.title}</h3>
+      <h3 className={styles.saleTitle} title={p.title}>
+      <Link to={`/products/${p.id}`} className={styles.saleTitleLink}>
+        {p.title}
+      </Link>
+      </h3>
       <div className={styles.salePriceRow}>
         <span className={styles.salePriceNow}>${price}</span>
         <span className={styles.salePriceOld}>${old}</span>
       </div>
     </div>
-  </Link>
-</li>
-                );
-              })}
-            </ul>
-          ))}
-        </div>
-      </div>
+  </li>
+);
+})}
+</ul>
+))}
+  </div>
+    </div>
+
       <button
         className={`${styles.saleNav} ${styles.saleNext}`}
         onClick={() => saleCanNext && setSalePage((p) => p + 1)}
