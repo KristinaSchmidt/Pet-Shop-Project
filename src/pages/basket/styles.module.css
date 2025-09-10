@@ -1,0 +1,369 @@
+.container{
+  padding:40px;
+  background:#fff;
+  border-top:1px solid #ececf0;
+  font-family:"Montserrat", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+.topRow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:16px;
+}
+
+.title{
+  margin:0;
+  font-size:32px;
+  font-weight:800;
+}
+
+.backBtn{
+  font-size:12px;
+  padding:6px 10px;
+  border:1px solid #e9e9ee;
+  border-radius:10px;
+  text-decoration:none;
+  color:#3b4252;
+  background:#f7f7fb;
+}
+
+
+.grid{
+  display:grid;
+  grid-template-columns: minmax(0, 1fr) 360px; /* Liste | Summary */
+  gap:24px;
+  align-items:start;
+}
+
+
+.list{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.muted{ color:#777; }
+
+/* Basket-Karte */
+.card{
+  display:grid;
+  grid-template-columns: 96px 1fr auto;
+  gap:12px;
+  align-items:center;
+  border:1px solid #e9e9ee;
+  border-radius:12px;
+  background:#fff;
+  padding:10px;
+}
+
+.thumb{
+  width:96px; height:96px;
+  object-fit:cover;
+  border-radius:8px;
+  background:#fff;
+}
+
+.info{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.itemTitle{
+  margin:0;
+  font-size:14px;
+  font-weight:600;
+  color:#111827;
+  line-height:1.3;
+}
+
+/* Menge + Preise */
+.controls{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+
+.qty{
+  display:inline-flex;
+  align-items:center;
+  border:1px solid #e5e7eb;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.qty button{
+  width:36px; height:40px;
+  border:none;
+  background:#f4f5f7;
+  font-size:18px;
+  cursor:pointer;
+  transition:background-color .12s ease;
+}
+.qty button:hover{ background:#e9eaef; }
+
+.qty input{
+  width:56px; height:40px;
+  border:none; outline:none;
+  text-align:center;
+  font-weight:700;
+  background:#fff;
+}
+
+/* Preise */
+.prices{
+  display:flex;
+  gap:10px;
+  align-items:baseline;
+}
+
+.now{
+  font-size:20px;
+  font-weight:800;
+  color:#111827;
+}
+
+.old{
+  font-size:14px;
+  color:#99a1ab;
+  text-decoration:line-through;
+}
+
+/* Remove-Button */
+.remove{
+  width:32px; height:32px;
+  border:none;
+  background:#f4f5f7;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:18px;
+  line-height:1;
+  transition:background-color .12s ease, color .12s ease;
+}
+.remove:hover{ background:#ffecec; color:#b00020; }
+
+
+.summary{
+  position:sticky;
+  top:24px;
+  border:1px solid #e9e9ee;
+  border-radius:12px;
+  background:#fff;
+  padding:16px;
+}
+
+.sumTitle{
+  margin:0 0 12px;
+  font-size:18px;
+  font-weight:800;
+}
+
+.meta{
+  margin:0 0 12px;
+}
+.meta div{
+  display:flex;
+  justify-content:space-between;
+  padding:8px 0;
+  border-bottom:1px dashed #e5e7eb;
+}
+.meta div:last-child{ border-bottom:none; }
+.meta dt{ color:#6b7280; }
+.total{
+  font-size:28px;
+  font-weight:800;
+  color:#111827;
+}
+
+/* Formular */
+.form{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.input{
+  height:44px;
+  padding:0 12px;
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  outline:none;
+  background:#fff;
+}
+
+.orderBtn{
+  height:44px;
+  border:none;
+  border-radius:12px;
+  background:#2d5bff;
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+  transition:background-color .12s ease;
+}
+.orderBtn:hover{ background:#000; }
+
+
+
+@media (max-width: 980px){
+  .grid{
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .summary{
+    position: static;
+    top: auto;
+  }
+  .list{
+    gap: 10px;
+  }
+}
+
+
+@media (max-width: 768px){
+  .container{
+    padding: 24px;
+  }
+
+  .topRow{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .title{
+    font-size: clamp(20px, 5.4vw, 26px);
+  }
+  .backBtn{
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+
+  .card{
+    grid-template-columns: 72px 1fr;
+    gap: 10px;
+    align-items: start;
+    padding: 10px;
+  }
+  .thumb{
+    width: 72px; height: 72px;
+    border-radius: 8px;
+  }
+
+  .info{ gap: 6px; }
+
+  .itemTitle{
+    font-size: clamp(13px, 3.8vw, 15px);
+    line-height: 1.3;
+  }
+
+ 
+  .controls{
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px 12px;
+    align-items: center;
+  }
+
+  .qty{
+    border-radius: 10px;
+  }
+  .qty button{
+    width: 36px; height: 36px;
+    font-size: 18px;
+  }
+  .qty input{
+    width: 52px; height: 36px;
+    font-size: 16px;
+  }
+
+  .prices{
+    justify-content: flex-end;
+    gap: 8px;
+  }
+  .now{ font-size: clamp(18px, 5vw, 22px); }
+  .old{ font-size: clamp(12px, 3.6vw, 14px); }
+
+
+  .remove{
+    justify-self: end;
+    align-self: start;
+    width: 28px; height: 28px;
+    font-size: 16px;
+  }
+}
+
+
+@media (max-width: 480px){
+  .container{ padding: 20px 16px; }
+
+  .controls{
+    grid-template-columns: 1fr;
+  }
+  .prices{ justify-content: flex-start; }
+
+  .thumb{ width: 64px; height: 64px; }
+
+  .now{ font-size: clamp(17px, 5.6vw, 20px); }
+  .old{ font-size: clamp(11px, 4vw, 13px); }
+}
+
+
+@media (max-width: 768px){
+  .card{
+    display: grid;
+    grid-template-columns: 64px 1fr auto auto auto;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .thumb{ width: 64px; height: 64px; }
+
+  .info{
+    min-width: 0;
+  }
+  .itemTitle{
+    font-size: clamp(13px, 3.8vw, 15px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+  }
+
+
+  .controls{ display: contents; }
+
+
+  .qty{
+    justify-self: start;
+    border-radius: 10px;
+  }
+  .qty button{ width: 32px; height: 32px; font-size: 18px; }
+  .qty input{ width: 48px; height: 32px; font-size: 16px; }
+
+
+  .prices{
+    justify-self: end;
+    gap: 8px;
+  }
+  .now{ font-size: clamp(18px, 5vw, 20px); }
+  .old{ font-size: clamp(12px, 3.6vw, 14px); }
+
+
+  .remove{
+    justify-self: end;
+    align-self: center;
+    width: 28px; height: 28px; font-size: 16px;
+  }
+}
+
+
+@media (max-width: 480px){
+  .card{ grid-template-columns: 56px 1fr auto auto auto; gap: 8px; }
+  .thumb{ width: 56px; height: 56px; }
+  .qty button{ width: 30px; height: 30px; }
+  .qty input{ width: 44px; height: 30px; }
+}

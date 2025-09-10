@@ -42,26 +42,49 @@
   cursor: pointer;
 }
 
+
+
+/* Badge */
+.cartBadge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #2166ff;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 999px;
+  height: 20px;
+  min-width: 20px;
+  padding: 0 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 2px #fff;
+  z-index: 99;
+}
+
+
+@media (max-width: 480px) {
+  .cartIcon { width: 36px; }
+  .cartBadge { top: -5px; right: -5px; height: 18px; min-width: 18px; font-size: 11px; }
+}
+
 @media (max-width: 768px) {
-  .header {
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
+  .header { 
+    flex-direction: row; 
+    align-items: center; 
+    padding: 40px; 
   }
 
-  .list ul {
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 20px;
-  }
+  .list { display: none; }
+  .burgerBtn{ display: inline-flex; align-items: center; justify-content: center; }
+  .cartIcon { width: 36px; }
+}
 
-  .list ul li a {
-    font-size: 18px;
-  }
 
-  .icon {
-    margin-top: 20px;
-  }
+@media (max-width: 480px) {
+  .cartIcon { width: 32px; }
 }
 
 @media (max-width: 480px) {
@@ -77,3 +100,58 @@
     width: 36px;
   }
 }
+
+.cartIcon {
+  width: 48px;
+  height: auto;
+  display: block;
+  cursor: pointer;
+}
+
+
+.cartLink {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+}
+
+
+.actions { display: flex; align-items: center; gap: 14px; }
+
+.burgerBtn{
+  display: none;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+}
+
+
+.burgerLines,
+.burgerLines::before,
+.burgerLines::after{
+  content: "";
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #111;
+  position: relative;
+  margin: 0 auto;
+}
+.burgerLines::before{ position: absolute; top: -6px; left: 0; }
+.burgerLines::after{  position: absolute; top:  6px; left: 0; }
+
+
+.closeX,
+.closeX::before,
+.closeX::after{
+  content: "";
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: #111;
+  position: relative;
+}
+.closeX::before{ position: absolute; top: 0; left: 0; transform: rotate(45deg); }
+.closeX::after{  position: absolute; top: 0; left: 0; transform: rotate(-45deg); }

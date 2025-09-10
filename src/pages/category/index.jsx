@@ -2,10 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import styles from "./styles.module.css";
 import { api, apiImg } from "../../redux/slices/api";
+import { useDispatch } from "react-redux";
+import { addItem } from "../../redux/slices/basketSlice";
 
 export default function CategoryPage() {
   const { id } = useParams();
-
+  const dispatch = useDispatch();
   const [items, setItems] = useState([]);
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState("");
@@ -20,32 +22,39 @@ export default function CategoryPage() {
         if (ignore) return;
         const cat = (data ?? []).find((c) => String(c.id) === String(id));
         setCategory(cat || null);
-      } catch (e) 
-
-      
+      } catch (e) {
+        //  für Titel
+      }
     })();
     return () => { ignore = true; };
   }, [id]);
 
-
+  // Produkte dieser Kategorie laden
   useEffect(() => {
     let ignore = false;
     setStatus("loading");
+    setError("");
     api.get(`/categories/${id}`)
-      .then((data) => {
+      .then((payload) => {
         if (ignore) return;
-        setItems(Array.isArray(data) ? data : []);
+        const products = Array.isArray(payload?.data)
+          ? payload.data
+          : Array.isArray(payload)
+          ? payload
+          : [];
+        setItems(products);
+        setCategory(payload?.category ?? null);
         setStatus("succeeded");
       })
       .catch((e) => {
         if (ignore) return;
-        setError(e?.message || "Load failed");
         setStatus("failed");
+        setError(e?.response?.data?.message || e.message);
       });
     return () => { ignore = true; };
   }, [id]);
 
-
+  // Filter-Logik
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [onlyDiscount, setOnlyDiscount] = useState(false);
@@ -72,21 +81,26 @@ export default function CategoryPage() {
 
   return (
     <div className={styles.container}>
-      {/* Breadcrumbs */}
       <nav className={styles.breadcrumbs}>
-        <Link to="/">Main page</Link><span>/</span>
-        <Link to="/categories">Categories</Link><span>/</span>
-        <span>{category?.title ?? "Category"}</span>
+        <span className={styles.crumb}>
+        <Link className={styles.chip} to="/">Main page</Link>
+        </span>
+        <span className={styles.crumb}>
+        <Link className={styles.chip} to="/categories">Categories</Link>
+        </span>
+        <span className={`${styles.crumb} ${styles.current}`}>
+        <span className={styles.chip}>{category?.title ?? "Category"}</span>
+        </span>
       </nav>
-
       <h1 className={styles.pageTitle}>{category?.title ?? "Category"}</h1>
-
 
       <div className={styles.controls}>
         <div className={styles.price}>
+          <div className={styles.priceFilter}>
           <span>Price</span>
           <input type="number" placeholder="from" value={from} onChange={(e)=>setFrom(e.target.value)} />
           <input type="number" placeholder="to" value={to} onChange={(e)=>setTo(e.target.value)} />
+        </div>
         </div>
         <label className={styles.check}>
           <input type="checkbox" checked={onlyDiscount} onChange={(e)=>setOnlyDiscount(e.target.checked)} />
@@ -108,23 +122,28 @@ export default function CategoryPage() {
       {status === "failed" && <p className={styles.error}>Error: {error}</p>}
       {status === "succeeded" && list.length === 0 && <p className={styles.muted}>No products in this category.</p>}
 
-
+      {/* Grid */}
       <div className={styles.grid}>
         {list.map((p) => (
           <Link key={p.id} to={`/products/${p.id}`} className={styles.card}>
             <div className={styles.imageWrap}>
               {p.__pct > 0 && <span className={styles.badge}>-{p.__pct}%</span>}
               <img src={apiImg(p.image)} alt={p.title} />
+              <button
+                type="button"
+                className={styles.addBtn}
+                onClick={(e)=>{ e.preventDefault(); dispatch(addItem(p, 1)); }}
+              >
+                Add to cart
+               </button>
             </div>
             <div className={styles.cardBody}>
               <h3 className={styles.title} title={p.title}>{p.title}</h3>
               <div className={styles.prices}>
-                <span className={styles.price}>${p.__now.toFixed(2)}</span>
+                <span className={styles.priceNow}>${p.__now.toFixed(2)}</span>
                 {p.__pct > 0 && <span className={styles.old}>${p.__old.toFixed(2)}</span>}
               </div>
-              <button type="button" className={styles.addBtn}>
-                Add to cart
-              </button>
+              
             </div>
           </Link>
         ))}

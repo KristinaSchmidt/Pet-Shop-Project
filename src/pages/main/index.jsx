@@ -124,7 +124,7 @@ const saleCanNext = salePage < Math.max(saleSlides.length - 1, 0);
         </div>
       </section>
 
-      {/* KARUSSELL: immer 4 Karten */}
+      {/* Karussell: immer 4 Karten */}
       {slides.length > 0 && (
     <section className={styles.catSection} aria-label="Categories carousel">
       <div className={styles.catHeader}>

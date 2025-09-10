@@ -7,7 +7,7 @@ import "@fontsource/montserrat/500.css";
 import "@fontsource/montserrat/600.css";
 import "@fontsource/montserrat/700.css";
 import { Provider } from "react-redux";
-import store from "./redux/store";
+import { store } from "./redux/store";
 import React from "react";
 
 console.log("ENV TEST (main.jsx):", import.meta.env.VITE_API_URL);

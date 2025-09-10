@@ -6,6 +6,10 @@ import Footer from "./components/footer/index";
 import Categories from "./pages/categories/index";
 import Sales from "./pages/sales/index";
 import CategoryPage from "./pages/category/index";
+import AllProductsPage from "./pages/products/index";
+import ProductPage from "./pages/product/index";
+import NotFoundPage from "./pages/NotFoundPage/index/";
+import BasketPage from "./pages/basket/index";
 
 
 function App() {
@@ -19,9 +23,11 @@ function App() {
         <Route path= "/" element= {<Main /> } />
         <Route path="/categories" element={<Categories />} />
         <Route path="/categories/:id" element={<CategoryPage />} />
-        {/*<Route path= "/products" element= {<Products />} />*/}
+        <Route path= "/products" element= {<AllProductsPage />} />
+        <Route path="/products/:id" element={<ProductPage />} />
         <Route path= "/sales" element= {<Sales />} />
-        <Route path="*" element={<h1 style={{padding:24}}>404 Page Not Found</h1>} />
+        <Route path="/cart" element={<BasketPage />} />
+        <Route path="/not-found" element={<NotFoundPage />} />
       </Routes> 
      <Footer /> 
       

@@ -93,7 +93,7 @@
 }
 
 
-/* ====== Startseiten-Kategorien-Karussell ====== */
+/* Karussell */
 .catSection{
   padding-top: 32px;
   padding-bottom: 32px;
@@ -128,7 +128,7 @@
    text-decoration:none;
 }
 
-/* Carousel-Layout */
+
 .catCarousel{ 
   position:relative; 
 }
@@ -235,63 +235,41 @@
 }
 
 /* Mobile Categorie */
-@media (max-width: 1200px){
-  .catSection{ 
-    padding: 28px 8%; 
+@media (max-width: 980px){
+  .catSlide{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 1fr;
+    gap: 16px;
+    min-width: 100%;
+    padding: 0;
   }
 
-  .catCard{ 
-    width:280px; 
+
+  .catSlide .catCard{
+    width: auto;
+    height: 100%;
+  }
+  .catSlide .catCardLink{
+    height: 100%;
   }
 }
 
-@media (max-width: 992px){
-  .catSection{ 
-    padding: 24px 6%; 
-  }
-
-  .catSlide{ 
-    justify-content: space-between; 
-    gap:16px; 
-  }
-
-  .catCard{ 
-    width: 240px; 
-  }
-
-}
 
 @media (max-width: 768px){
-  .catCard{ 
-    width: 45vw; 
+  .catSlide{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
   }
-
-}
-@media (max-width: 480px){
-  .catCard{ 
-    width: 86vw; 
-  }
-
-  .catPrev{ 
-    left:-10px; 
-  } 
-
-  .catNext{ 
-    right:-10px; 
-  }
-
-}
-
-@media (max-width:640px){
-  .catDivider{ 
-    display:none; 
-  }
-
+  .catSlide .catCard{ width: auto; }
 }
 
 
 
-/* sales  */
+
+
+/* Sales  */
 .saleSection{ 
   margin-top:24px; 
   padding: 40px; 
@@ -329,7 +307,7 @@
 }
 
 
-/* ===== Carousel (4 pro Slide) ===== */
+/*  Karussell */
 .saleCarousel{ position:relative; }
 .saleViewport{ overflow:hidden; }
 .saleTrack{
@@ -337,7 +315,7 @@
   will-change: transform;
 }
 
-/* JEDER Slide hat 4 Karten (wie Categories) */
+
 .saleSlide{
   list-style:none; padding:0; margin:0;
   display:grid; grid-template-columns:repeat(4, minmax(0,1fr));
@@ -357,7 +335,7 @@
 
 .saleCardLink{
   display:grid;
-  grid-template-rows: auto 1fr;   /* Bild | Body */
+  grid-template-rows: auto 1fr;
   text-decoration:none;
   color:inherit;
   height:100%;
@@ -380,44 +358,204 @@
 .saleBody{
   display:flex;
   flex-direction:column;
-  gap:6px;                        /* enger wie im Design */
-  padding:10px 12px 12px;         /* Card-Padding */
+  gap:6px;
+  padding:10px 12px 12px;
 }
 
 .saleTitle{
-  margin:0; font-size:20px; font-weight:600; color:#111827;
-  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height: calc(1em * 1.4 * 2);
+  margin:0; 
+  font-size:20px; 
+  font-weight:600; 
+  color:#111827;
+  display:-webkit-box; 
+  -webkit-line-clamp:2; 
+  -webkit-box-orient:vertical; 
+  overflow:hidden; 
+  min-height: calc(1em * 1.4 * 2);
 }
 
 .salePriceRow{
   display:flex;
   align-items:baseline;
   gap:10px;
-  margin-top:auto;               /* schiebt die Preise nach unten */
+  margin-top:auto;
 }
-.salePriceNow{ font-size:40px; font-weight:700; color:#111; }
-.salePriceOld{ font-size:20px; color:#9CA3AF; text-decoration:line-through; font-weight:600; }
+.salePriceNow{ 
+  font-size:40px; 
+  font-weight:700; 
+  color:#111; 
+}
 
-/* Nav-Buttons (gleich wie Categories) */
+.salePriceOld{ 
+  font-size:20px; 
+  color:#9CA3AF; 
+  text-decoration:line-through; 
+  font-weight:600; 
+}
+
+
 .saleNav{
-  position:absolute; top:50%; transform:translateY(-50%);
-  width:36px; height:36px; border:none; border-radius:50%;
-  background:#fff; box-shadow:0 2px 8px rgba(0,0,0,.15);
+  position:absolute; 
+  top:50%; 
+  transform:translateY(-50%);
+  width:36px; 
+  height:36px; 
+  border:none; 
+  border-radius:50%;
+  background:#fff; 
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
   cursor:pointer;
 }
+
 .salePrev{ left:-12px; }
 .saleNext{ right:-12px; }
-.saleNav:disabled{ opacity:.4; cursor:default; }
+.saleNav:disabled{ 
+  opacity:.4; 
+  cursor:default; 
+}
 
 /* Dots */
-.saleDots{ display:flex; gap:8px; justify-content:center; margin-top:12px; }
-.saleDot{
-  width:8px; height:8px; border-radius:50%; border:1px solid #cfd8e3; background:#fff;
+.saleDots{ 
+  display:flex; 
+  gap:8px; 
+  justify-content:center; 
+  margin-top:12px; 
 }
-.saleDot.active{ background:#2d5bff; border-color:#2d5bff; }
-.saleCardLink:hover .saleThumb img{ transform: scale(1.02); transition: transform .2s ease; }
-/* Responsive: 2 Spalten auf kleineren Screens (wie Categories) */
+
+.saleDot{
+  width:8px; 
+  height:8px; 
+  border-radius:50%; 
+  border:1px solid #cfd8e3; 
+  background:#fff;
+}
+
+.saleDot.active{ 
+  background:#2d5bff; 
+  border-color:#2d5bff; 
+}
+
+.saleCardLink:hover .saleThumb img{ 
+  transform: scale(1.02); 
+  transition: transform .2s ease; 
+}
+
+
+
+
+.saleSection a,
+.saleSection a:link,
+.saleSection a:visited,
+.saleSection a:hover,
+.saleSection a:active {
+  text-decoration: none;
+  color: inherit;
+}
+
+
+.saleTitleLink {
+  color: #111827;
+  text-decoration: none;
+}
+
+.saleTitleLink:hover {
+  color: #0D50FF;
+}
+
+.saleThumbLink {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+
+.saleSection a:focus-visible {
+  outline: 2px solid #0D50FF;
+  outline-offset: 2px;
+}
+
+
 @media (max-width: 980px){
-  .saleSlide{ grid-template-columns:repeat(2, minmax(0,1fr)); }
-  .saleThumb img{ height:170px; }
+  .saleSlide{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    grid-auto-rows: 1fr;
+    gap: 16px;
+    min-width: 100%;
+    padding: 0;
+  }
+
+
+  .saleCard{
+    width: auto;
+    height: 100%;
+  }
+  .saleCardLink{
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    text-decoration: none;
+    color: inherit;
+  }
+
+
+  .saleThumb{
+    aspect-ratio: 1 / 1;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .saleThumb img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+
+  .saleBody{
+    padding: 8px 10px 10px;
+    gap: 4px;
+    text-align: center;
+  }
+  .saleTitle{
+    font-size: clamp(12px, 3.6vw, 14px);
+    line-height: 1.25;
+    margin: 0;
+    min-height: calc(1em * 1.25 * 2);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .salePriceRow{
+    justify-content: center;
+    gap: 8px;
+  }
+  .salePriceNow{ font-size: clamp(16px, 5vw, 20px); }
+  .salePriceOld{ font-size: clamp(12px, 3.8vw, 14px); }
+
+
+  .saleNav{ width: 38px; height: 38px; }
+}
+
+
+@media (max-width: 768px){
+  .saleSlide{ gap: 14px; }
+}
+
+
+@media (max-width: 480px){
+  .salePrev{ left: -10px; }
+  .saleNext{ right: -10px; }
+  .saleTitle{
+    font-size: clamp(12px, 4vw, 14px);
+  }
+}
+
+@media (max-width: 768px){
+  .catHeader h2,
+  .saleHeader h2{
+    font-size: clamp(18px, 5.5vw, 24px);
+    line-height: 1.15;
+    margin: 0;
+  }
 }

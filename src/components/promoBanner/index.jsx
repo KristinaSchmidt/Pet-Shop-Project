@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
 import pets from "../../assets/images/pets.svg";
 
+
+
 export default function PromoBanner({
   title = "5% off on the first order",
   image = pets,

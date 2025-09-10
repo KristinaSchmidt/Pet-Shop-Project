@@ -1,58 +1,141 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { api, apiImg } from "../../redux/slices/api";
-import styles from "./styles.module.css";
+import { useDispatch } from "react-redux";
+import { addItem } from "../../redux/slices/basketSlice";
 
-export default function Sales() {
+
+import styles from "../products/styles.module.css";
+
+export default function SalesPage() {
   const [items, setItems] = useState([]);
-  const [status, setStatus] = useState("idle");
+  const [status, setStatus] = useState("loading");
   const [error, setError] = useState("");
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (status !== "idle") return;
+    let ignore = false;
     setStatus("loading");
+    setError("");
     api.get("/products/all")
-      .then((data) => {
-        const discounted = (data ?? []).filter(
-          (p) => Number(p.discont_price) > 0 && Number(p.discont_price) < Number(p.price)
-        );
-        setItems(discounted.slice(0, 8)); // ALLE 8
+      .then((payload) => {
+        if (ignore) return;
+        const all = Array.isArray(payload) ? payload
+                  : Array.isArray(payload?.data) ? payload.data : [];
+        setItems(all);
         setStatus("succeeded");
       })
-      .catch((e) => { setError(e?.message || "Load failed"); setStatus("failed"); });
-  }, [status]);
+      .catch((e) => {
+        if (ignore) return;
+        setError(e?.response?.data?.message || e.message);
+        setStatus("failed");
+      });
+    return () => { ignore = true; };
+  }, []);
+
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [sortBy, setSortBy] = useState("default");
+
+  const list = useMemo(() => {
+    const norm = (p) => {
+      const old = Number(p.price) || 0;
+      const now = Number(p.discont_price ?? p.discount_price ?? old) || 0;
+      const pct = old > 0 && now > 0 && now < old ? Math.round(100 * (1 - now / old)) : 0;
+      return { ...p, __old: old, __now: now, __pct: pct };
+    };
+    let arr = items.map(norm).filter((p) => p.__pct > 0);
+
+    const min = from === "" ? undefined : Number(from);
+    const max = to === "" ? undefined : Number(to);
+    if (min !== undefined) arr = arr.filter((p) => p.__now >= min);
+    if (max !== undefined) arr = arr.filter((p) => p.__now <= max);
+
+    if (sortBy === "price_asc") arr.sort((a, b) => a.__now - b.__now);
+    if (sortBy === "price_desc") arr.sort((a, b) => b.__now - a.__now);
+    if (sortBy === "sale") arr.sort((a, b) => b.__pct - a.__pct);
+
+    return arr;
+  }, [items, from, to, sortBy]);
 
   return (
-    <section className={styles.section}>
-      <header className={styles.header}>
-        <h2>All sales</h2>
-      </header>
+    <div className={styles.container}>
+      <nav className={styles.breadcrumbs}>
+        <span className={styles.crumb}>
+          <Link className={styles.chip} to="/">Main page</Link>
+        </span>
+        <span className={`${styles.crumb} ${styles.current}`}>
+          <span className={styles.chip}>All sales</span>
+        </span>
+      </nav>
 
-      {status === "loading" && <p>Loading…</p>}
+      <h1 className={styles.pageTitle}>All sales</h1>
+
+      <div className={styles.controls}>
+        <div className={styles.priceFilter}>
+          <span>Price</span>
+          <input
+            type="number"
+            placeholder="from"
+            value={from}
+            onChange={(e) => setFrom(e.target.value)}
+          />
+          <input
+            type="number"
+            placeholder="to"
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+          />
+        </div>
+
+        <label className={styles.check} title="Only discounted items">
+          <input type="checkbox" checked readOnly />
+          Discounted items
+        </label>
+
+        <div className={styles.sort}>
+          <span>Sorted</span>
+          <select value={sortBy} onChange={(e)=>setSortBy(e.target.value)}>
+            <option value="default">by default</option>
+            <option value="price_asc">price: low → high</option>
+            <option value="price_desc">price: high → low</option>
+            <option value="sale">biggest discount</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Status */}
+      {status === "loading" && <p className={styles.muted}>Loading…</p>}
       {status === "failed" && <p className={styles.error}>Error: {error}</p>}
+      {status === "succeeded" && list.length === 0 && (
+        <p className={styles.muted}>No discounted products.</p>
+      )}
+
 
       <div className={styles.grid}>
-        {items.map((p) => {
-          const price = Number(p.discont_price);
-          const old = Number(p.price);
-          const percent = Math.round(100 * (1 - price / old));
-          return (
-            <article key={p.id} className={styles.card}>
-              <Link to={`/products/${p.id}`} className={styles.cardLink}>
-                <div className={styles.thumb}>
-                  <img src={apiImg(p.image)} alt={p.title} />
-                  <span className={styles.badge}>-{percent}%</span>
-                </div>
-                <h3 className={styles.title}>{p.title}</h3>
-                <div className={styles.priceRow}>
-                  <span className={styles.now}>${price}</span>
-                  <span className={styles.old}>${old}</span>
-                </div>
-              </Link>
-            </article>
-          );
-        })}
+        {list.map((p) => (
+          <Link key={p.id} to={`/products/${p.id}`} className={styles.card}>
+            <div className={styles.imageWrap}>
+              {p.__pct > 0 && <span className={styles.badge}>-{p.__pct}%</span>}
+              <img src={apiImg(p.image)} alt={p.title} />
+              <button
+                type="button"
+                className={styles.addBtn}
+                onClick={(e)=>{ e.preventDefault(); dispatch(addItem(p, 1)); }}
+              >
+                Add to cart
+              </button>
+            </div>
+            <div className={styles.cardBody}>
+              <h3 className={styles.title} title={p.title}>{p.title}</h3>
+              <div className={styles.prices}>
+                <span className={styles.priceNow}>${p.__now.toFixed(2)}</span>
+                <span className={styles.old}>${p.__old.toFixed(2)}</span>
+              </div>
+            </div>
+          </Link>
+        ))}
       </div>
-    </section>
+    </div>
   );
 }

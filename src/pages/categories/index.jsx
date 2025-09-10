@@ -15,8 +15,6 @@ export default function CategoriesPage() {
 
   return (
     <section className={styles.section}>
-      
-      {/* Button */}
       <nav className={styles.breadcrumbs} aria-label="Breadcrumb">
         <Link to="/" className={styles.chip}>Main page</Link>
         <span className={`${styles.chip} ${styles.chipActive}`}>Categories</span>

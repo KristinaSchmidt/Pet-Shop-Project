@@ -18,11 +18,21 @@ function Footer() {
         <div className={styles.card}>
           <p>Socials</p>
           <div className={styles.socials}>
-            <Link to="/">
-              <img src={instagramIcon} alt="Instagram" />
+            <Link
+              to="/not-found"
+              aria-label="Instagram"
+              onClick={(e)=>e.stopPropagation()}
+              className={styles.socialLink}
+            >
+              <img src={instagramIcon} alt="" />
             </Link>
-            <Link to="/">
-              <img src={whatsappIcon} alt="WhatsApp" />
+            <Link
+              to="/not-found"
+              aria-label="WhatsApp"
+              onClick={(e)=>e.stopPropagation()}
+              className={styles.socialLink}
+            >
+              <img src={whatsappIcon} alt="" />
             </Link>
           </div>
         </div>
