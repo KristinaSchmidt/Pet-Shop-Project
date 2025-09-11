@@ -367,3 +367,15 @@
   .qty button{ width: 30px; height: 30px; }
   .qty input{ width: 44px; height: 30px; }
 }
+
+
+
+
+.field { margin-bottom: 12px; }
+
+/* OPTIONAL: roter Rand bei ungültigen Feldern */
+.inputInvalid {
+  border-color: #e03131;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(224, 49, 49, 0.08);
+}

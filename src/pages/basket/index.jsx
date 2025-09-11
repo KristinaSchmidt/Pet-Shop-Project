@@ -1,12 +1,9 @@
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./styles.module.css";
-import {
-  selectBasketItems, selectBasketTotal, selectBasketCount,
-  inc, dec, setQty, removeItem
-} from "../../redux/slices/basketSlice";
+import { selectBasketItems, selectBasketTotal, selectBasketCount, inc, dec, setQty, removeItem } from "../../redux/slices/basketSlice";
 import { apiImg, api } from "../../redux/slices/api";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 export default function BasketPage() {
   const dispatch = useDispatch();
@@ -14,13 +11,68 @@ export default function BasketPage() {
   const total = useSelector(selectBasketTotal);
   const count = useSelector(selectBasketCount);
 
-  // Form-State
   const [form, setForm] = useState({ name: "", phone: "", email: "" });
-  const canOrder = items.length > 0 && form.name && form.phone && form.email;
+  const [touched, setTouched] = useState({ name: false, phone: false, email: false });
+  const [submitted, setSubmitted] = useState(false);
 
-  // POST-Submit
+
+  const CLEAR_ON_INVALID = true;
+
+
+  const validators = useMemo(() => ({
+    name: (v) => v.trim().length >= 2,
+    phone: (v) => /^\+?[0-9][0-9 ()-]{5,}$/.test(v.trim()),
+    email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+  }), []);
+
+
+  const errText = {
+    name: "Please enter your name (min 2 characters).",
+    phone: "Please enter a valid phone number.",
+    email: "Please enter a valid email address.",
+  };
+
+  const isValidField = {
+    name: validators.name(form.name),
+    phone: validators.phone(form.phone),
+    email: validators.email(form.email),
+  };
+  const isValid = isValidField.name && isValidField.phone && isValidField.email;
+
+
+  const placeholders = {
+    name: (submitted || touched.name) && !isValidField.name ? errText.name : "Name",
+    phone: (submitted || touched.phone) && !isValidField.phone ? errText.phone : "Phone number",
+    email: (submitted || touched.email) && !isValidField.email ? errText.email : "Email",
+  };
+
+  const handleBlur = (field) => {
+    setTouched((t) => ({ ...t, [field]: true }));
+    if (!isValidField[field] && CLEAR_ON_INVALID) {
+
+      setForm((f) => ({ ...f, [field]: "" }));
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitted(true);
+
+    if (!items.length) {
+      alert("Your cart is empty.");
+      return;
+    }
+    if (!isValid) {
+
+      if (CLEAR_ON_INVALID) {
+        setForm((f) => ({
+          name: isValidField.name ? f.name : "",
+          phone: isValidField.phone ? f.phone : "",
+          email: isValidField.email ? f.email : "",
+        }));
+      }
+      return;
+    }
 
     const payload = {
       customer: {
@@ -28,25 +80,52 @@ export default function BasketPage() {
         phone: form.phone.trim(),
         email: form.email.trim(),
       },
-      items: items.map(i => ({
+      items: items.map((i) => ({
         id: i.id,
         title: i.title,
         qty: i.qty,
         price: Number(i.priceNow),
-        subtotal: Number(i.priceNow * i.qty)
+        subtotal: Number(i.priceNow * i.qty),
       })),
       total: Number(total.toFixed(2)),
       createdAt: new Date().toISOString(),
     };
 
-    try {
-      const res = await api.post("/order", payload, {
-        headers: { "Content-Type": "application/json" }
-      });
-      console.log("ORDER_OK", res.data);
-    } catch (err) {
-      console.error("ORDER_FAIL", err);
+
+    const endpointsToTry = [
+      "/order",
+      "/orders",
+      "/order/create",
+      "/order/send",
+      "/checkout",
+      "/cart/order",
+      "/api/order",
+      "/api/orders",
+    ];
+
+    let lastErr = null;
+    for (const path of endpointsToTry) {
+      try {
+        console.log("[ORDER][TRY]", path);
+        const res = await api.post(path, payload, {
+          headers: { "Content-Type": "application/json" },
+        });
+        console.log("[ORDER_OK]", path, res?.status);
+        alert(`Order placed via ${path} (status: ${res?.status}).`);
+        return;
+      } catch (err) {
+        const status = err?.response?.status;
+        console.warn("[ORDER_FAIL]", path, status);
+        lastErr = err;
+        if (status && status !== 404) break;
+      }
     }
+
+    alert(
+      lastErr?.response
+        ? `Server error: ${lastErr.response.status} ${lastErr.response.statusText || ""}`
+        : `Network/Proxy error: ${lastErr?.message}`
+    );
   };
 
   return (
@@ -60,19 +139,22 @@ export default function BasketPage() {
         <div className={styles.list}>
           {items.length === 0 && <p className={styles.muted}>Your cart is empty.</p>}
 
-          {items.map(i => (
+          {items.map((i) => (
             <article key={i.id} className={styles.card}>
               <img className={styles.thumb} src={apiImg(i.image)} alt={i.title} />
               <div className={styles.info}>
                 <h3 className={styles.itemTitle}>{i.title}</h3>
                 <div className={styles.controls}>
                   <div className={styles.qty}>
-                    <button onClick={()=>dispatch(dec(i.id))}>−</button>
+                    <button type="button" onClick={() => dispatch(dec(i.id))}>−</button>
                     <input
-                      type="number" min="1" max="99" value={i.qty}
-                      onChange={(e)=>dispatch(setQty({ id: i.id, qty: e.target.value }))}
+                      type="number"
+                      min="1"
+                      max="99"
+                      value={i.qty}
+                      onChange={(e) => dispatch(setQty({ id: i.id, qty: Number(e.target.value) }))}
                     />
-                    <button onClick={()=>dispatch(inc(i.id))}>+</button>
+                    <button type="button" onClick={() => dispatch(inc(i.id))}>+</button>
                   </div>
                   <div className={styles.prices}>
                     <span className={styles.now}>${(i.priceNow * i.qty).toFixed(0)}</span>
@@ -82,7 +164,14 @@ export default function BasketPage() {
                   </div>
                 </div>
               </div>
-              <button className={styles.remove} onClick={()=>dispatch(removeItem(i.id))}>×</button>
+              <button
+                type="button"
+                className={styles.remove}
+                onClick={() => dispatch(removeItem(i.id))}
+                aria-label="Remove item"
+              >
+                ×
+              </button>
             </article>
           ))}
         </div>
@@ -95,30 +184,51 @@ export default function BasketPage() {
           </dl>
 
 
-          <form className={styles.form} onSubmit={handleSubmit}>
-            <input
-              className={styles.input}
-              placeholder="Name"
-              value={form.name}
-              onChange={(e)=>setForm(f=>({ ...f, name: e.target.value }))}
-              required
-            />
-            <input
-              className={styles.input}
-              placeholder="Phone number"
-              value={form.phone}
-              onChange={(e)=>setForm(f=>({ ...f, phone: e.target.value }))}
-              required
-            />
-            <input
-              className={styles.input}
-              placeholder="Email"
-              type="email"
-              value={form.email}
-              onChange={(e)=>setForm(f=>({ ...f, email: e.target.value }))}
-              required
-            />
-            <button className={styles.orderBtn} type="submit" disabled={!canOrder}>
+          <form className={styles.form} onSubmit={handleSubmit} noValidate>
+            <div className={styles.field}>
+              <input
+                className={`${styles.input} ${ (submitted || touched.name) && !isValidField.name ? styles.inputInvalid : "" }`}
+                placeholder={placeholders.name}
+                value={form.name}
+                onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                onBlur={() => handleBlur("name")}
+
+                aria-invalid={(submitted || touched.name) && !isValidField.name}
+                aria-label="Name"
+              />
+            </div>
+
+            <div className={styles.field}>
+              <input
+                className={`${styles.input} ${ (submitted || touched.phone) && !isValidField.phone ? styles.inputInvalid : "" }`}
+                placeholder={placeholders.phone}
+                type="tel"
+                inputMode="tel"
+                value={form.phone}
+                onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+                onBlur={() => handleBlur("phone")}
+
+                aria-invalid={(submitted || touched.phone) && !isValidField.phone}
+                aria-label="Phone number"
+              />
+            </div>
+
+            <div className={styles.field}>
+              <input
+                className={`${styles.input} ${ (submitted || touched.email) && !isValidField.email ? styles.inputInvalid : "" }`}
+                placeholder={placeholders.email}
+                type="email"
+                value={form.email}
+                onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                onBlur={() => handleBlur("email")}
+
+                aria-invalid={(submitted || touched.email) && !isValidField.email}
+                aria-label="Email"
+              />
+            </div>
+
+
+            <button className={styles.orderBtn} type="submit" disabled={!items.length}>
               Order
             </button>
           </form>

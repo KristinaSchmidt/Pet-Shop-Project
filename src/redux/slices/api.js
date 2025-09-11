@@ -10,7 +10,7 @@ export const api = axios.create({
   timeout: 10000,
 });
 
-
+export const ORDERS_PATH = import.meta.env.VITE_ORDERS_PATH || "/api/orders"; 
 api.interceptors.request.use((cfg) => {
   console.log("[API][REQ]", cfg.method?.toUpperCase(), API_BASE + cfg.url);
   return cfg;
